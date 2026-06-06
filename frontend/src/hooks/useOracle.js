@@ -19,7 +19,10 @@ let readOracle   = null;
 
 function getReadOracle() {
   if (!readOracle) {
-    readProvider = new ethers.JsonRpcProvider(RPC_URL);
+    readProvider = new ethers.JsonRpcProvider(RPC_URL, {
+  chainId: 984,
+  name: "opn-testnet"
+});
     readOracle   = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, readProvider);
   }
   return readOracle;
