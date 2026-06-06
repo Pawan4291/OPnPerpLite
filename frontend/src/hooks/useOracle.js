@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 // ── Read-only provider — NO wallet needed ─────────────────────────────────────
 // This lets the price show even before the user connects MetaMask
 const RPC_URL        = import.meta.env.VITE_RPC_URL        || "https://rpc.iopn.tech";
-const ORACLE_ADDRESS = import.meta.env.VITE_ORACLE_ADDRESS || "0x688428b07983c792AF70994Fd4C11cd0eB33E76d";
+const ORACLE_ADDRESS = import.meta.env.VITE_ORACLE_ADDRESS || "0x688428b07903c792AF70994Fd4C11C0eB33E76D";
 
 const ORACLE_ABI = [
   "function getPrice() external view returns (uint256)",
