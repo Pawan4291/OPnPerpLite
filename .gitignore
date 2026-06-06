@@ -1,0 +1,9 @@
+node_modules/
+.env
+artifacts/
+cache/
+deployed-addresses.json
+frontend/dist/
+frontend/node_modules/
+keeper/node_modules/
+keeper/.env

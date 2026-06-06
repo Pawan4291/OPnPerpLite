@@ -1,0 +1,14 @@
+{
+  "name": "opn-perp-lite-keeper",
+  "version": "1.0.0",
+  "description": "Price oracle keeper + liquidation bot for OPN Perp Lite",
+  "main": "keeper.js",
+  "scripts": {
+    "start": "node keeper.js",
+    "dev": "node --watch keeper.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "ethers": "^6.9.0"
+  }
+}

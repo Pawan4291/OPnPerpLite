@@ -1,0 +1,19 @@
+{
+  "name": "opn-perp-lite",
+  "version": "1.0.0",
+  "description": "Perpetual DEX on OPN Chain — IOPn Builder Season 1",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:testnet": "npx hardhat run scripts/deploy.js --network opn_testnet",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network hardhat",
+    "node": "npx hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+}
