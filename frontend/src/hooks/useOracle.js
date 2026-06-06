@@ -4,27 +4,25 @@ import { ethers } from "ethers";
 const RPC_URL        = import.meta.env.VITE_RPC_URL        || "https://testnet-rpc.iopn.tech";
 const ORACLE_ADDRESS = import.meta.env.VITE_ORACLE_ADDRESS || "0x688428b07903c792AF70994Fd4C11C0eB33E76D";
 
-const ORACLE_ABI = [
-  "function getPrice() external view returns (uint256)",
-  "function lastUpdated() external view returns (uint256)",
-  "function getPriceHistory() external view returns (uint256[] memory prices, uint256[] memory timestamps, uint256 count)",
-];
+// Raw JSON-RPC call — no ethers provider, no ENS lookup
+async function rpcCall(method, params = []) {
+  const res = await fetch(RPC_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.result;
+}
 
-// Static network stops ethers v6 from doing ENS lookups
-const OPN_NETWORK = new ethers.Network("opn-testnet", 984);
-
-let readProvider = null;
-let readOracle   = null;
-
-function getReadOracle() {
-  if (!readOracle) {
-    // StaticNetwork = no ENS, no extra RPC calls
-    readProvider = new ethers.JsonRpcProvider(RPC_URL, OPN_NETWORK, {
-      staticNetwork: OPN_NETWORK,
-    });
-    readOracle = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, readProvider);
-  }
-  return readOracle;
+// eth_call helper — call a contract function
+async function callContract(address, sig, outputTypes) {
+  const iface     = new ethers.Interface([`function ${sig}`]);
+  const fnName    = sig.split("(")[0];
+  const calldata  = iface.encodeFunctionData(fnName, []);
+  const result    = await rpcCall("eth_call", [{ to: address, data: calldata }, "latest"]);
+  return iface.decodeFunctionResult(fnName, result);
 }
 
 export function useOracle(contracts) {
@@ -35,42 +33,49 @@ export function useOracle(contracts) {
 
   const fetchPrice = async () => {
     try {
-      const oracle = getReadOracle();
-
-      const p  = await oracle.getPrice();
-      const lu = await oracle.lastUpdated();
-
-      const priceNum = Number(p);
-      if (priceNum === 0) {
-        console.warn("[Oracle] Price is 0");
-        return;
-      }
-
+      // getPrice()
+      const [priceRaw] = await callContract(
+        ORACLE_ADDRESS,
+        "getPrice() returns (uint256)",
+        ["uint256"]
+      );
+      const priceNum = Number(priceRaw);
+      if (priceNum === 0) { console.warn("[Oracle] Price is 0"); return; }
       setPrice(priceNum);
-      setLastUpdated(Number(lu));
+      console.log("[Oracle] Price:", priceNum / 1_000_000);
 
-      // Check if stale (older than 5 minutes)
-      const age = Date.now() / 1000 - Number(lu);
-      setIsStale(age > 300);
-
-      // Price history
+      // lastUpdated()
       try {
-        const [prices, timestamps, count] = await oracle.getPriceHistory();
+        const [lu] = await callContract(
+          ORACLE_ADDRESS,
+          "lastUpdated() returns (uint256)",
+          ["uint256"]
+        );
+        const luNum = Number(lu);
+        setLastUpdated(luNum);
+        setIsStale(Date.now() / 1000 - luNum > 300);
+      } catch (_) {}
+
+      // getPriceHistory()
+      try {
+        const [prices, timestamps, count] = await callContract(
+          ORACLE_ADDRESS,
+          "getPriceHistory() returns (uint256[],uint256[],uint256)",
+          ["uint256[]", "uint256[]", "uint256"]
+        );
         const n = Number(count);
         const history = [];
         for (let i = 0; i < n; i++) {
-          const pVal = Number(prices[i]);
-          const tVal = Number(timestamps[i]);
-          if (pVal > 0 && tVal > 0) {
-            history.push({ price: pVal / 1_000_000, timestamp: tVal * 1000 });
-          }
+          const p = Number(prices[i]);
+          const t = Number(timestamps[i]);
+          if (p > 0 && t > 0) history.push({ price: p / 1_000_000, timestamp: t * 1000 });
         }
         if (history.length > 0) {
           setPriceHistory(history);
-          console.log(`[Oracle] $${history[history.length - 1].price} | ${history.length} points`);
+          console.log(`[Oracle] ${history.length} points | latest: $${history[history.length-1].price}`);
         }
       } catch (e) {
-        console.warn("[Oracle] History error:", e.message);
+        console.warn("[Oracle] History:", e.message);
       }
 
     } catch (err) {
@@ -85,6 +90,5 @@ export function useOracle(contracts) {
   }, []);
 
   const priceUSD = price ? (price / 1_000_000).toFixed(6) : null;
-
   return { price, priceUSD, priceHistory, lastUpdated, isStale, refetch: fetchPrice };
 }
