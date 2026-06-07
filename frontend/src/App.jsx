@@ -41,7 +41,7 @@ const [showApp, setShowApp] = useState(false);
         <div className="hero-contracts">
           <div className="hero-contract-title">Deployed Contracts · OPN Testnet</div>
           <div className="hero-contract-row"><span>OracleKeeper</span><span>0x688428b07903c792AF70994Fd4C11Cd0eB33E76D</span></div>
-          <div className="hero-contract-row"><span>LiquidityVault</span><span>0xE7B3b20FDD21E23EFd861baf5a5f88775E3695969</span></div>
+          <div className="hero-contract-row"><span>LiquidityVault</span><span>0xE73b20FDD21E23EFd861baf5a5f88775E3695969</span></div>
           <div className="hero-contract-row"><span>PerpEngine</span><span>0x4a7acf3Bba2A15d5493f7C772C96d2e28b5C9836</span></div>
         </div>
       </div>
