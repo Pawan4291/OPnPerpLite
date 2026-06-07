@@ -7,6 +7,8 @@ The first perpetuals trading protocol deployed on OPN Chain. Trade OPN with up t
 ## Live Demo
 **[https://opnperplite.vercel.app](https://opnperplite.vercel.app)**
 
+<img width="1475" height="764" alt="Screenshot Capture - 2026-06-07 - 11-47-08" src="https://github.com/user-attachments/assets/f5064670-067c-4590-bcf3-13908fa0ef20" />
+
 ## Deployed Contracts — OPN Testnet (Chain ID: 984)
 
 | Contract | Address | Explorer |
