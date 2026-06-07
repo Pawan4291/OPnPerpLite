@@ -32,7 +32,7 @@ OPN Perp Lite fixes that. It is the first protocol where OPN holders can long or
 
 ## Architecture
 
-\```
+```
 CoinGecko API → keeper.js (Railway, 24/7)
                       ↓ setPrice() every 30s
               OracleKeeper.sol
@@ -40,7 +40,7 @@ CoinGecko API → keeper.js (Railway, 24/7)
 PerpEngine.sol ←——→ LiquidityVault.sol
                       ↓
         Frontend (React + Vite, Vercel)
-\```
+```
 
 ## How It Works
 
