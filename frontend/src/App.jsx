@@ -8,7 +8,7 @@ import LiquidityPage from "./pages/LiquidityPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import "./index.css";
 import AnimatedBackground from "./components/AnimatedBackground";
-
+import opnLogo from "./opn-logo.png";
 const TABS = ["TRADE", "POSITIONS", "LIQUIDITY", "LEADERBOARD"];
 
 export default function App() {
@@ -56,9 +56,9 @@ const [showApp, setShowApp] = useState(false);
       {/* ── Header ── */}
       <header className="header">
         <div className="header-left">
-          <div className="logo">
-  <div className="logo-icon-box">⟁</div>
-  <span className="logo-text">OPN <span className="logo-accent">PERP</span> <span className="logo-dim">LITE</span></span>
+         <div className="logo">
+  <img src={opnLogo} alt="OPN" className="logo-img" />
+  <span className="logo-text">OPN <span className="logo-accent">PERP</span> <span className="logo-lite-badge">LITE</span></span>
 </div>
           <div className="price-ticker">
             {priceUSD ? (
@@ -159,7 +159,8 @@ const [showApp, setShowApp] = useState(false);
       {/* ── Footer ── */}
       <footer className="footer">
   <div className="footer-left">
-    <span className="footer-logo">⟁ OPN PERP LITE</span>
+    <img src={opnLogo} alt="OPN" className="footer-logo-img" />
+    <span className="footer-logo">OPN <strong>PERP</strong> <span className="logo-lite-badge">LITE</span></span>
     <span className="footer-sep">·</span>
     <span>Built on OPN Chain</span>
     <span className="footer-sep">·</span>

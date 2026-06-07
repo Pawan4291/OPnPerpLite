@@ -144,7 +144,7 @@ z-index: 10;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  height: 56px;
+  height: 62px;
   background: rgba(8,11,20,0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -176,11 +176,11 @@ z-index: 10;
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: var(--font-ui);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -223,34 +223,34 @@ z-index: 10;
 /* Nav tabs */
 .nav {
   display: flex;
-  gap: 2px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 3px;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 .nav-btn {
   background: transparent;
   border: none;
+  border-bottom: 2px solid transparent;
   color: var(--text-dim);
   font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 16px;
-  border-radius: 6px;
+  padding: 6px 16px;
+  border-radius: 0;
   cursor: pointer;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  font-size: 11px;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
-.nav-btn:hover  { color: var(--text); background: var(--bg4); }
+.nav-btn:hover { color: var(--text); background: transparent; }
 .nav-btn.active {
   color: #fff;
-  background: linear-gradient(135deg, rgba(124,140,255,0.25), rgba(167,139,250,0.2));
-  border: 1px solid rgba(124,140,255,0.3);
-  box-shadow: 0 0 12px rgba(124,140,255,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  box-shadow: none;
 }
 
 /* Wallet / Connect */
@@ -288,13 +288,21 @@ z-index: 10;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg3);
-  border: 1px solid var(--border-bright);
-  padding: 0 13px;
-  height: 32px;
-  border-radius: 7px;
-  box-shadow: var(--glow-sm);
+  background: rgba(124,140,255,0.10);
+  border: 1px solid rgba(124,140,255,0.40);
+  padding: 0 16px;
+  height: 36px;              /* ← taller */
+  border-radius: 20px;       /* ← full pill shape */
+  box-shadow: 0 0 16px rgba(124,140,255,0.15);
+  cursor: pointer;
 }
+.wallet-addr {
+  color: var(--text);
+  font-size: 13px;           /* ← bigger */
+  font-family: var(--font-mono);
+  letter-spacing: 0.3px;
+}
+.wallet-addr { color: var(--text); font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.3px; }
 .wallet-dot  { color: var(--long); font-size: 7px; animation: blink 2s ease infinite; filter: drop-shadow(0 0 4px var(--long)); }
 .wallet-addr { color: var(--text); font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.3px; }
 
@@ -336,18 +344,29 @@ z-index: 10;
 
 /* ── Footer ──────────────────────────────────── */
 .footer {
-  padding: 10px 24px;
-  border-top: 1px solid var(--glass-edge);
+  padding: 12px 24px;
+  border-top: 1px solid rgba(124,140,255,0.12);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-dim);
+  color: rgba(255,255,255,0.45);   /* ← brighter than before */
   font-size: 11px;
   font-family: var(--font-mono);
-  background: rgba(8,11,20,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(6,8,14,0.98);
+  backdrop-filter: blur(20px);
   flex-shrink: 0;
+  letter-spacing: 0.4px;
+}
+.footer a { color: rgba(124,140,255,0.7); text-decoration: none; transition: color 0.15s; }
+.footer a:hover { color: var(--accent); }
+.footer-logo {
+  color: rgba(255,255,255,0.85);
+  font-weight: 700;
+  font-size: 13px;
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .footer a { color: var(--accent); text-decoration: none; transition: opacity 0.15s; }
 .footer a:hover { opacity: 0.7; }
@@ -1199,7 +1218,7 @@ z-index: 10;
   color: var(--accent);
 }
 /* ── Final polish additions ── */
-.footer-left { display:flex; align-items:center; gap:10px; }
+.footer-left { display:flex; align-items:center; gap:12px; }
 .footer-logo { color:var(--accent); font-weight:700; letter-spacing:0.05em; }
 .footer-sep  { color:var(--border-bright); }
 .footer-right { display:flex; align-items:center; gap:16px; }
@@ -1580,4 +1599,63 @@ z-index: 10;
 
 @media (max-width:768px) {
   .lp-bottom-stats { grid-template-columns:1fr 1fr; }
+}
+/* Logo lite badge — pill style like Image 1 */
+.logo-lite-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  padding: 2px 9px;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  margin-left: 3px;
+}
+
+/* Header right — tighter gap between faucet and wallet */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Footer — match Image 1 dark style */
+.footer {
+  padding: 14px 24px;
+  border-top: 1px solid rgba(255,255,255,0.055);
+  background: rgba(6,8,14,0.98);
+  backdrop-filter: blur(20px);
+}
+
+/* Footer logo icon */
+.footer-logo-icon {
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.logo-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(124,100,255,0.5));
+}
+
+.footer-logo-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(124,100,255,0.4));
 }

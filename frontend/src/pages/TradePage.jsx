@@ -155,20 +155,20 @@ useEffect(() => {
         </div>
 
         <div style={s.tickerRight}>
-          {[
-            { label: "MARK",    val: priceUSD ? `$${parseFloat(priceUSD).toFixed(6)}` : "—" },
-{ label: "24H HI",  val: high24 ? `$${Math.max(high24, parseFloat(priceUSD||0)).toFixed(6)}` : "—" },
-{ label: "24H LO",  val: low24  ? `$${Math.min(low24,  parseFloat(priceUSD||0)).toFixed(6)}`  : "—" },
-            { label: "ORACLE",  val: "CoinGecko" },
-            { label: "NETWORK", val: "OPN Chain" },
-          ].map(({ label, val }) => (
-            <div key={label} style={s.stat}>
-              <span style={s.statLabel}>{label}</span>
-              <span style={s.statVal}>{val}</span>
-            </div>
-          ))}
-          <div style={s.livePill}><span style={s.liveDot}/> LIVE</div>
-        </div>
+  {[
+    { label: "Mark Price", val: priceUSD ? `$${parseFloat(priceUSD).toFixed(6)}` : "—" },
+    { label: "24h High",   val: high24 ? `$${Math.max(high24, parseFloat(priceUSD||0)).toFixed(6)}` : "—" },
+    { label: "24h Low",    val: low24  ? `$${Math.min(low24,  parseFloat(priceUSD||0)).toFixed(6)}`  : "—" },
+    { label: "Oracle",     val: "CoinGecko" },
+    { label: "Network",    val: "OPN Chain" },
+  ].map(({ label, val }) => (
+    <div key={label} style={s.stat}>
+      <span style={s.statLabel}>{label}</span>
+      <span style={s.statVal}>{val}</span>
+    </div>
+  ))}
+  <div style={s.livePill}><span style={s.liveDot}/> LIVE</div>
+</div>
       </div>
 
       {/* ── BODY ── */}
@@ -381,63 +381,156 @@ useEffect(() => {
         
       </div>
 <div style={{
-  marginTop: "0",
+  marginTop: "16px",
   borderTop: "1px solid rgba(124,140,255,0.10)",
   padding: "0 16px",
 }}>
 
 {/* ── PROTOCOL STATS ── */}
-<div className="proto-stats-section">
-  <div className="proto-stat-card">
-    <div className="proto-stat-icon">◎</div>
-    <div className="proto-stat-body">
-      <div className="proto-stat-label">Total Volume</div>
-      <div className="proto-stat-value" style={{ color: "#00e5a0" }}>
-  {stats.volume > 0 ? stats.volume.toFixed(4) : "0.0000"} OPN
+<div style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(3,1fr)",
+  gap: 16,
+  padding: "24px 0 0",    // ← removed side padding, parent handles it
+  marginBottom: "32px",   // ← THIS is the gap between stats and info cards
+}}>
+  {[
+    { icon: "◎", label: "TOTAL VOLUME",   val: `${stats.volume > 0 ? stats.volume.toFixed(5) : "0.00000"} OPN`,   sub: "24h", color: COLORS.green },
+    { icon: "⇅", label: "OPEN INTEREST",  val: `${stats.openInterest > 0 ? stats.openInterest.toFixed(5) : "0.00000"} OPN`, sub: "24h", color: COLORS.green },
+    { icon: "◈", label: "ACTIVE TRADERS", val: `${stats.activeTraders > 0 ? stats.activeTraders : "0"}`,           sub: "24h", color: COLORS.lavender },
+  ].map(({ icon, label, val, sub, color }) => (
+    <div key={label} style={{
+      background: "rgba(13,10,26,0.8)",
+      border: "1px solid rgba(123,63,228,0.20)",
+      borderRadius: 14,
+      padding: "18px 20px",
+      display: "flex",
+      alignItems: "center",
+      gap: 16,
+    }}>
+      <span style={{ fontSize: 28, color: COLORS.violet }}>{icon}</span>
+      <div>
+        <div style={{ fontSize: 9, color: COLORS.dimmed, letterSpacing: "0.1em", marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color, fontFamily: "monospace" }}>{val}</div>
+        <div style={{ fontSize: 9, color: COLORS.dimmed, marginTop: 2 }}>{sub}</div>
+      </div>
+    </div>
+  ))}
 </div>
-<div className="proto-stat-sub">Cumulative OPN traded</div>
+  <div style={s.opnSection}>
+
+  {/* Card 1 — Oracle */}
+  <div style={s.opnCard}>
+    <div style={s.cardIllustration}>
+      <svg width="100%" height="100%" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g1" cx="30%" cy="60%" r="60%">
+            <stop offset="0%" stopColor="#7B3FE4" stopOpacity="0.3"/>
+            <stop offset="100%" stopColor="#0A0812" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="400" height="200" fill="url(#g1)"/>
+        {/* Circle backdrop */}
+        <circle cx="100" cy="110" r="70" fill="none" stroke="rgba(123,63,228,0.25)" strokeWidth="1"/>
+        <circle cx="100" cy="110" r="50" fill="rgba(123,63,228,0.12)" stroke="rgba(123,63,228,0.3)" strokeWidth="1"/>
+        {/* OPN logo placeholder */}
+        <text x="100" y="118" textAnchor="middle" fill="white" fontSize="22" fontWeight="700">⟁</text>
+        {/* Price line chart */}
+        <polyline points="180,160 210,130 240,145 270,100 300,115 330,80 360,60 390,40"
+          fill="none" stroke="#7B3FE4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="390" cy="40" r="4" fill="#A259FF"/>
+        <circle cx="270" cy="100" r="3" fill="rgba(162,89,255,0.6)"/>
+        {/* Dots decoration */}
+        <circle cx="160" cy="60" r="3" fill="rgba(123,63,228,0.5)"/>
+        <circle cx="370" cy="130" r="2" fill="rgba(123,63,228,0.3)"/>
+      </svg>
+    </div>
+    <div style={s.cardBody}>
+      <div style={s.cardLiveBadge}>
+        <span style={{ color: COLORS.green, fontSize: 8 }}>●</span> LIVE · COINGECKO
+      </div>
+      <h3 style={s.cardTitle}>Oracle Price Feed</h3>
+      <p style={s.cardDesc}>Real-time OPN/USD pricing sourced from CoinGecko and pushed on-chain every 30 seconds by the keeper network.</p>
     </div>
   </div>
-  <div className="proto-stat-card">
-    <div className="proto-stat-icon" style={{ color: "#00e5a0" }}>⇅</div>
-    <div className="proto-stat-body">
-      <div className="proto-stat-label">Open Interest</div>
-      <div className="proto-stat-value" style={{ color: "#00e5a0" }}>
-  {stats.openInterest > 0 ? stats.openInterest.toFixed(4) : "0.0000"} OPN
-</div>
-      <div className="proto-stat-sub">Active position exposure</div>
+
+  {/* Card 2 — Perpetuals */}
+  <div style={s.opnCard}>
+    <div style={s.cardIllustration}>
+      <svg width="100%" height="100%" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g2" cx="50%" cy="80%" r="60%">
+            <stop offset="0%" stopColor="#7B3FE4" stopOpacity="0.5"/>
+            <stop offset="100%" stopColor="#0A0812" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="400" height="200" fill="url(#g2)"/>
+        {/* Platform glow */}
+        <ellipse cx="200" cy="170" rx="80" ry="12" fill="rgba(123,63,228,0.4)"/>
+        <ellipse cx="200" cy="162" rx="60" ry="8" fill="rgba(162,89,255,0.3)"/>
+        {/* OPN arch */}
+        <text x="200" y="148" textAnchor="middle" fill="white" fontSize="36" fontWeight="800">⟁</text>
+        {/* Candles */}
+        {[[120,60,100,80],[150,50,90,70],[310,55,95,75],[340,65,105,85],[370,45,85,65]].map(([x,h,t,b],i) => (
+          <g key={i}>
+            <line x1={x} y1={t-15} x2={x} y2={h+15} stroke="rgba(162,89,255,0.5)" strokeWidth="1.5"/>
+            <rect x={x-5} y={h} width="10" height={b-h} fill="rgba(123,63,228,0.6)" rx="1"/>
+          </g>
+        ))}
+      </svg>
+    </div>
+    <div style={s.cardBody}>
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:12 }}>
+        <div style={s.cardIconBox}>⇅</div>
+        <h3 style={s.cardTitle}>Trade Perpetuals</h3>
+      </div>
+      <p style={s.cardDesc}>Go long or short on OPN with up to 10× leverage. Positions are settled on-chain against the liquidity vault.</p>
+      <div style={{ display:"flex", gap:8, marginTop:12 }}>
+        {["2×","5×","10×"].map(l => (
+          <span key={l} style={s.cardTag}>{l}</span>
+        ))}
+      </div>
     </div>
   </div>
-  <div className="proto-stat-card">
-    <div className="proto-stat-icon" style={{ color: "#a78bfa" }}>◈</div>
-    <div className="proto-stat-body">
-      <div className="proto-stat-label">Active Traders</div>
-      <div className="proto-stat-value" style={{ color: "#a78bfa" }}>
-  {stats.activeTraders > 0 ? stats.activeTraders : "0"}
-</div>
-      <div className="proto-stat-sub">Unique wallets on OPN Chain</div>
+
+  {/* Card 3 — Vault */}
+  <div style={s.opnCard}>
+    <div style={s.cardIllustration}>
+      <svg width="100%" height="100%" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g3" cx="70%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#7B3FE4" stopOpacity="0.4"/>
+            <stop offset="100%" stopColor="#0A0812" stopOpacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="400" height="200" fill="url(#g3)"/>
+        {/* Shield */}
+        <path d="M260,30 L320,55 L320,120 Q320,155 260,175 Q200,155 200,120 L200,55 Z"
+          fill="rgba(123,63,228,0.20)" stroke="rgba(162,89,255,0.5)" strokeWidth="1.5"/>
+        {/* OPN in shield */}
+        <text x="260" y="115" textAnchor="middle" fill="white" fontSize="28" fontWeight="700">⟁</text>
+        {/* Lock badge */}
+        <circle cx="310" cy="150" r="18" fill="rgba(123,63,228,0.5)" stroke="rgba(162,89,255,0.6)" strokeWidth="1.5"/>
+        <text x="310" y="156" textAnchor="middle" fill="white" fontSize="14">🔒</text>
+        {/* Dots */}
+        <circle cx="100" cy="80" r="4" fill="rgba(123,63,228,0.4)"/>
+        <circle cx="130" cy="140" r="3" fill="rgba(123,63,228,0.3)"/>
+        <circle cx="80" cy="150" r="2" fill="rgba(162,89,255,0.3)"/>
+      </svg>
+    </div>
+    <div style={s.cardBody}>
+      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:12 }}>
+        <div style={s.cardIconBox}>⬡</div>
+        <h3 style={s.cardTitle}>Secure Vault</h3>
+      </div>
+      <p style={s.cardDesc}>All collateral is locked and managed entirely on OPN Chain. No custody. No intermediaries. Full on-chain settlement.</p>
+      <div style={{ display:"flex", gap:8, marginTop:12 }}>
+        <span style={s.cardTag}>OPN CHAIN</span>
+        <span style={s.cardTag}>NON-CUSTODIAL</span>
+      </div>
     </div>
   </div>
-</div>
-  <div className="opn-info-section">
-  <div className="info-card">
-    <span className="info-card-icon">◈</span>
-    <h3>Oracle Price Feed</h3>
-    <p>Real-time OPN/USD pricing sourced from CoinGecko and pushed on-chain every 30 seconds by the keeper network.</p>
-    <span className="info-card-tag">⬡ Live · CoinGecko</span>
-  </div>
-  <div className="info-card">
-    <span className="info-card-icon">⇅</span>
-    <h3>Trade Perpetuals</h3>
-    <p>Go long or short on OPN with up to 10× leverage. Positions are settled on-chain against the liquidity vault.</p>
-    <span className="info-card-tag">⬡ 2× · 5× · 10×</span>
-  </div>
-  <div className="info-card">
-    <span className="info-card-icon">⬡</span>
-    <h3>Secure Vault</h3>
-    <p>All collateral is locked and managed entirely on OPN Chain. No custody. No intermediaries. Full on-chain settlement.</p>
-    <span className="info-card-tag">⬡ OPN Chain · Non-Custodial</span>
-  </div>
+
 </div>
 </div>
 
@@ -684,7 +777,7 @@ const s = {
   },
   tickerRight: { display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" },
   stat:        { display: "flex", flexDirection: "column", gap: 2 },
-  statLabel:   { fontSize: 9,  color: COLORS.dimmed,   letterSpacing: "0.1em" },
+  statLabel: { fontSize: 10, color: COLORS.dimmed, letterSpacing: "0.04em" },
   statVal:     { fontSize: 11, color: COLORS.textSub, fontFamily: "monospace", fontWeight: 600 },
   livePill: {
     display: "flex", alignItems: "center", gap: 5,
@@ -701,7 +794,7 @@ const s = {
  body: {
   display: "grid",
   gridTemplateColumns: "minmax(0,1fr) 320px",
-  height: "620px",
+  height: "780px",
   overflow: "hidden",
   margin: "0 16px",
   alignItems: "start",
@@ -711,7 +804,7 @@ const s = {
 
   // ── Chart
 chartCol: {
-  height: "620px",
+  height: "780px",
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
@@ -748,7 +841,7 @@ chartCol: {
 
   // ── Order Panel
 orderCol: {
-  height: "620px",
+  height: "780px",
   display: "flex",
   flexDirection: "column",
   gap: 8,
@@ -896,14 +989,72 @@ opnSection: {
 },
 
 opnCard: {
-  background: "#0F0C1E",        // ← was rgba(24,16,50,.95)
-  border: "1px solid rgba(123,63,228,.20)",
-  borderRadius: "18px",
-  padding: "22px",
+  background: "rgba(10,8,20,0.95)",
+  border: "1px solid rgba(123,63,228,0.22)",
+  borderRadius: 16,
+  padding: 0,             // ← remove padding, cardBody owns it
+  overflow: "hidden",     // ← so illustration clips to border-radius
   backdropFilter: "blur(18px)",
-  boxShadow: "0 10px 30px rgba(0,0,0,.25)",
-  transition: "all .2s ease",
+  boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+  transition: "border-color 0.2s",
 },
+// ← paste all new styles here, before the closing };
+  cardIllustration: {
+    width: "100%",
+    height: 180,
+    overflow: "hidden",
+    borderRadius: "14px 14px 0 0",
+    background: "linear-gradient(180deg, #0E0B1E 0%, #0A0818 100%)",
+    flexShrink: 0,
+  },
+  cardBody: {
+    padding: "20px 22px 22px",
+  },
+  cardLiveBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    fontSize: 9,
+    fontWeight: 700,
+    color: COLORS.muted,
+    letterSpacing: "0.1em",
+    border: "1px solid rgba(123,63,228,0.3)",
+    borderRadius: 20,
+    padding: "3px 10px",
+    marginBottom: 10,
+  },
+  cardTitle: {
+    margin: 0,
+    fontSize: 16,
+    fontWeight: 700,
+    color: COLORS.text,
+  },
+  cardDesc: {
+    margin: 0,
+    fontSize: 11,
+    color: COLORS.muted,
+    lineHeight: 1.7,
+  },
+  cardIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    background: "rgba(123,63,228,0.2)",
+    border: "1px solid rgba(123,63,228,0.4)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 16,
+    flexShrink: 0,
+  },
+  cardTag: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: COLORS.muted,
+    letterSpacing: "0.08em",
+    border: "1px solid rgba(123,63,228,0.25)",
+    borderRadius: 6,
+    padding: "3px 8px",
+  },
 
-
-};
+};  // ← s object closes here
