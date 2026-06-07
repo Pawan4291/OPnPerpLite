@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 const RPC_URL        = import.meta.env.VITE_RPC_URL        || "https://testnet-rpc.iopn.tech";
-const ORACLE_ADDRESS = import.meta.env.VITE_ORACLE_ADDRESS || "0x688428b07903c792AF70994Fd4C11C0eB33E76D";
+const ORACLE_ADDRESS = import.meta.env.VITE_ORACLE_ADDRESS || "0x688428b07903c792AF70994Fd4C11Cd0eB33E76D";
 
 // Raw JSON-RPC call — no ethers provider, no ENS lookup
 async function rpcCall(method, params = []) {
