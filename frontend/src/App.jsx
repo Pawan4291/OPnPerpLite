@@ -12,17 +12,45 @@ import AnimatedBackground from "./components/AnimatedBackground";
 const TABS = ["TRADE", "POSITIONS", "LIQUIDITY", "LEADERBOARD"];
 
 export default function App() {
-  const [tab, setTab] = useState("TRADE");
+ const [tab, setTab] = useState("TRADE");
+const [showApp, setShowApp] = useState(false);
   const { signer, provider, address, isConnecting, isCorrectChain, connect, switchToOPN, disconnect } = useWallet();
   const contracts = useContracts(signer, provider);
   const { price, priceUSD, priceHistory, isStale } = useOracle(contracts);
 
   const shortAddr = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : null;
 
- return (
- <>
-    <AnimatedBackground />
+ if (!showApp) return (
+    <>
+      <AnimatedBackground />
+      <div className="hero">
+        <div className="hero-badge">⟁ OPN Chain · Season 1 · DeFi & Open Finance</div>
+        <h1 className="hero-title">The First <span className="hero-accent">Perpetuals DEX</span><br />on OPN Chain</h1>
+        <p className="hero-sub">Trade OPN with up to 10× leverage. Real liquidations. Real PnL. Fully on-chain.</p>
+        <div className="hero-stats">
+          <div className="hero-stat"><div className="hero-stat-val">3</div><div className="hero-stat-label">Smart Contracts</div></div>
+          <div className="hero-stat"><div className="hero-stat-val">10×</div><div className="hero-stat-label">Max Leverage</div></div>
+          <div className="hero-stat"><div className="hero-stat-val">30s</div><div className="hero-stat-label">Oracle Updates</div></div>
+          <div className="hero-stat"><div className="hero-stat-val">984</div><div className="hero-stat-label">OPN Chain ID</div></div>
+        </div>
+        <div className="hero-btns">
+          <button className="hero-btn-primary" onClick={() => setShowApp(true)}>Launch App →</button>
+          <a className="hero-btn-secondary" href="https://faucet.iopn.tech" target="_blank" rel="noreferrer">Get Testnet OPN</a>
+          <a className="hero-btn-secondary" href="https://testnet.iopn.tech" target="_blank" rel="noreferrer">Explorer ↗</a>
+        </div>
+        <div className="hero-contracts">
+          <div className="hero-contract-title">Deployed Contracts · OPN Testnet</div>
+          <div className="hero-contract-row"><span>OracleKeeper</span><span>0x688428b07903c792AF70994Fd4C11Cd0eB33E76D</span></div>
+          <div className="hero-contract-row"><span>LiquidityVault</span><span>0xE7B3b20FDD21E23EFd861baf5a5f88775E3695969</span></div>
+          <div className="hero-contract-row"><span>PerpEngine</span><span>0x4a7acf3Bba2A15d5493f7C772C96d2e28b5C9836</span></div>
+        </div>
+      </div>
+    </>
+  );
 
+  return (
+  <>
+    <AnimatedBackground />
     <div className="app">
 
       {/* ── Header ── */}
@@ -60,6 +88,9 @@ export default function App() {
         </nav>
 
         <div className="header-right">
+          <a href="https://faucet.iopn.tech" target="_blank" rel="noreferrer" className="faucet-btn">
+  💧 Faucet
+</a>
           {!address ? (
             <button className="connect-btn" onClick={connect} disabled={isConnecting}>
               {isConnecting ? "Connecting..." : "Connect Wallet"}

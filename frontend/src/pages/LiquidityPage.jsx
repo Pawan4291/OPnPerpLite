@@ -184,7 +184,7 @@ export default function LiquidityPage({ contracts, address, isConnected }) {
       {error && <div className="error-box">{error}</div>}
       {txHash && (
         <div className="tx-box">
-          ✓ Tx: <a href={`https://explorer.testnet.iopn.tech/tx/${txHash}`} target="_blank" rel="noreferrer">
+          ✓ Tx: <a href={`https://testnet.iopn.tech/tx/${txHash}`} target="_blank" rel="noreferrer">
             {txHash.slice(0, 10)}...
           </a>
         </div>
