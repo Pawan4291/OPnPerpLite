@@ -29,7 +29,7 @@ export default function PositionsPage({ contracts, address, price, priceUSD, isC
             isOpen: pos.isOpen,
             openedAt: Number(pos.openedAt),
             healthFactor: Number(health),
-            pnl: pnl  // raw bigint, could be negative
+            pnl: pnl,
           };
         })
       );
@@ -88,7 +88,21 @@ export default function PositionsPage({ contracts, address, price, priceUSD, isC
   return (
     <div className="positions-page">
       <div className="page-header">
-        <h2>Your Positions</h2>
+        <h2>
+          Your Positions{" "}
+          <span style={{
+            fontSize: 13,
+            background: "rgba(99,120,220,0.15)",
+            border: "1px solid rgba(99,120,220,0.3)",
+            color: "#7c9eff",
+            padding: "2px 10px",
+            borderRadius: 20,
+            marginLeft: 8,
+            verticalAlign: "middle",
+          }}>
+            {positions.length} Active
+          </span>
+        </h2>
         <button className="refresh-btn" onClick={fetchPositions}>↻ Refresh</button>
       </div>
 
@@ -103,77 +117,111 @@ export default function PositionsPage({ contracts, address, price, priceUSD, isC
           <div className="empty-sub">Open a position from the Trade tab</div>
         </div>
       ) : (
-        <div className="positions-grid">
-          {positions.map(pos => {
-            const pnlData = formatPnL(pos.pnl);
-            const health = pos.healthFactor;
-            const healthColor = health > 60 ? "#00ff88" : health > 30 ? "#ffaa00" : "#ff3366";
+        <div>
+          <div className="positions-grid">
+            {positions.map(pos => {
+              const pnlData = formatPnL(pos.pnl);
+              const health = pos.healthFactor;
+              const healthColor = health > 60 ? "#00ff88" : health > 30 ? "#ffaa00" : "#ff3366";
 
-            return (
-              <div key={pos.id} className={`position-card ${pos.isLong ? "long" : "short"}`}>
-                <div className="pos-header">
-                  <div className="pos-badge">
-                    <span className={`pos-dir ${pos.isLong ? "long" : "short"}`}>
-                      {pos.isLong ? "▲ LONG" : "▼ SHORT"}
-                    </span>
-                    <span className="pos-lev">{pos.leverage}×</span>
-                  </div>
-                  <span className="pos-id">#{pos.id}</span>
-                </div>
-
-                <div className="pos-stats">
-                  <div className="pos-stat">
-                    <span className="stat-label">Collateral</span>
-                    <span className="stat-val">{parseFloat(pos.collateral).toFixed(6)} OPN</span>
-                  </div>
-                  <div className="pos-stat">
-                    <span className="stat-label">Size</span>
-                    <span className="stat-val">{parseFloat(pos.positionSize).toFixed(4)} OPN</span>
-                  </div>
-                  <div className="pos-stat">
-                    <span className="stat-label">Entry Price</span>
-                    <span className="stat-val">{formatPrice(pos.entryPrice)}</span>
-                  </div>
-                  <div className="pos-stat">
-                    <span className="stat-label">Current Price</span>
-                    <span className="stat-val">${priceUSD || "—"}</span>
-                  </div>
-                  <div className="pos-stat">
-                    <span className="stat-label">Liq. Price</span>
-                    <span className="stat-val liq">{formatPrice(pos.liquidationPrice)}</span>
-                  </div>
-                  <div className="pos-stat">
-                    <span className="stat-label">PnL</span>
-                    <span className={`stat-val pnl ${pnlData.positive ? "positive" : "negative"}`}>
-                      {pnlData.text}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Health Bar */}
-                <div className="health-bar-wrap">
-                  <div className="health-label">
-                    <span>Health</span>
-                    <span style={{ color: healthColor }}>{health}%</span>
-                  </div>
-                  <div className="health-bar-bg">
-                    <div
-                      className="health-bar-fill"
-                      style={{ width: `${health}%`, background: healthColor }}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  className="close-pos-btn"
-                  onClick={() => closePosition(pos.id)}
-                  disabled={closingId === pos.id}
+              return (
+                <div
+                  key={pos.id}
+                  className={`position-card ${pos.isLong ? "long" : "short"}`}
+                  style={{
+                    border: pos.isLong ? "1px solid rgba(0,255,136,0.3)" : "1px solid rgba(255,51,102,0.3)",
+                    boxShadow: pos.isLong ? "0 0 20px rgba(0,255,136,0.05)" : "0 0 20px rgba(255,51,102,0.05)",
+                    borderRadius: 16,
+                    padding: 24,
+                  }}
                 >
-                  {closingId === pos.id ? "Closing..." : "Close Position"}
-                </button>
+                  <div className="pos-header">
+                    <div className="pos-badge">
+                      <span className={`pos-dir ${pos.isLong ? "long" : "short"}`}>
+                        {pos.isLong ? "▲ LONG" : "▼ SHORT"}
+                      </span>
+                      <span className="pos-lev">{pos.leverage}×</span>
+                    </div>
+                    <span className="pos-id">#{pos.id}</span>
+                  </div>
+
+                  <div className="pos-stats">
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>Collateral</span>
+                      <span className="stat-val">{parseFloat(pos.collateral).toFixed(6)} OPN</span>
+                    </div>
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>Size</span>
+                      <span className="stat-val">{parseFloat(pos.positionSize).toFixed(4)} OPN</span>
+                    </div>
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>Entry Price</span>
+                      <span className="stat-val">{formatPrice(pos.entryPrice)}</span>
+                    </div>
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>Current Price</span>
+                      <span className="stat-val">${priceUSD || "—"}</span>
+                    </div>
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>Liq. Price</span>
+                      <span className="stat-val liq">{formatPrice(pos.liquidationPrice)}</span>
+                    </div>
+                    <div className="pos-stat">
+                      <span className="stat-label" style={{textTransform:"uppercase",fontSize:10,letterSpacing:"0.08em"}}>PnL</span>
+                      <span className={`stat-val pnl ${pnlData.positive ? "positive" : "negative"}`}>
+                        {pnlData.text}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="health-bar-wrap">
+                    <div className="health-label">
+                      <span>Health</span>
+                      <span style={{ color: healthColor }}>{health}%</span>
+                    </div>
+                    <div className="health-bar-bg">
+                      <div className="health-bar-fill" style={{ width: `${health}%`, background: healthColor }} />
+                    </div>
+                  </div>
+
+                  <button
+                    className="close-pos-btn"
+                    onClick={() => closePosition(pos.id)}
+                    disabled={closingId === pos.id}
+                  >
+                    {closingId === pos.id ? "Closing..." : "Close Position"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ── BOTTOM STATS BAR ── */}
+          <div style={{display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, marginTop:24}}>
+            {[
+              { icon:"🗄️", label:"TOTAL VOLUME",   val:"—",  sub:"Cumulative OPN traded" },
+              { icon:"📈", label:"OPEN INTEREST",  val:`${positions.reduce((a,p) => a + parseFloat(p.positionSize), 0).toFixed(4)} OPN`, sub:"Active position exposure" },
+              { icon:"👥", label:"ACTIVE TRADERS", val: address ? "1" : "0", sub:"Unique wallets on OPN Chain" },
+              { icon:"💲", label:"ORACLE STATUS",  val: priceUSD ? "Healthy" : "—", sub: priceUSD ? "Updated 2s ago" : "Waiting..." },
+            ].map(({ icon, label, val, sub }) => (
+              <div key={label} style={{
+                background:"rgba(255,255,255,0.03)",
+                border:"1px solid rgba(99,120,220,0.12)",
+                borderRadius:14,
+                padding:"18px 20px",
+                display:"flex",
+                gap:14,
+                alignItems:"center",
+              }}>
+                <div style={{fontSize:28, opacity:0.7}}>{icon}</div>
+                <div>
+                  <div style={{fontSize:10, color:"#3d4a6e", letterSpacing:"0.1em", marginBottom:4}}>{label}</div>
+                  <div style={{fontSize:20, fontWeight:700, color: label === "ORACLE STATUS" ? "#00dc82" : "#dde4ff"}}>{val}</div>
+                  <div style={{fontSize:11, color:"#3d4a6e", marginTop:2}}>{sub}</div>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
     </div>
