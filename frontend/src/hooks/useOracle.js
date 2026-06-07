@@ -60,7 +60,7 @@ export function useOracle(contracts) {
       try {
         const [prices, timestamps, count] = await callContract(
           ORACLE_ADDRESS,
-          "getPriceHistory() returns (uint256[],uint256[],uint256)",
+          "getPriceHistory() returns (uint256[50],uint256[50],uint256)",
           ["uint256[]", "uint256[]", "uint256"]
         );
         const n = Number(count);
