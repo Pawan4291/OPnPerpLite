@@ -152,8 +152,8 @@ const paginated = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
         const globalIdx = (page-1)*PAGE_SIZE + i;
         const pnlData = formatPnL(entry.pnl);
         const isMe = address && entry.address.toLowerCase() === address.toLowerCase();
-        const winRate = Math.max(40, Math.min(90, 55 + globalIdx * 2.1)).toFixed(1);
-        const trades = Math.max(1, leaderboard.length - globalIdx);
+       const winRate = null;
+const trades = null;
 
         return (
           <div key={entry.address} className={`lb2-row ${isMe ? "lb2-mine" : ""}`}>
@@ -173,12 +173,9 @@ const paginated = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
               <span className={pnlData.positive ? "lb2-pnl-pos" : "lb2-pnl-neg"}>{pnlData.text}</span>
             </span>
             <span className="lb2-winrate-cell">
-              <span className="lb2-winrate-val">{winRate}%</span>
-              <div className="lb2-winrate-bar">
-                <div className="lb2-winrate-fill" style={{width:`${winRate}%`}}/>
-              </div>
-            </span>
-            <span className="lb2-trades">{trades}</span>
+  <span className="lb2-winrate-val">—</span>
+</span>
+<span className="lb2-trades">—</span>
           </div>
         );
       })}

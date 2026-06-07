@@ -197,13 +197,11 @@ export default function PositionsPage({ contracts, address, price, priceUSD, isC
           </div>
 
           {/* ── BOTTOM STATS BAR ── */}
-          <div style={{display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12, marginTop:24}}>
+         <div style={{display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:12, marginTop:24}}>
             {[
-              { icon:"🗄️", label:"TOTAL VOLUME",   val:"—",  sub:"Cumulative OPN traded" },
-              { icon:"📈", label:"OPEN INTEREST",  val:`${positions.reduce((a,p) => a + parseFloat(p.positionSize), 0).toFixed(4)} OPN`, sub:"Active position exposure" },
-              { icon:"👥", label:"ACTIVE TRADERS", val: address ? "1" : "0", sub:"Unique wallets on OPN Chain" },
-              { icon:"💲", label:"ORACLE STATUS",  val: priceUSD ? "Healthy" : "—", sub: priceUSD ? "Updated 2s ago" : "Waiting..." },
-            ].map(({ icon, label, val, sub }) => (
+  { icon:"📈", label:"OPEN INTEREST",  val:`${positions.reduce((a,p) => a + parseFloat(p.positionSize), 0).toFixed(4)} OPN`, sub:"Active position exposure" },
+  { icon:"💲", label:"ORACLE STATUS",  val: priceUSD ? "Healthy" : "—", sub: priceUSD ? `Current: $${priceUSD}` : "Waiting for oracle..." },
+].map(({ icon, label, val, sub }) => (
               <div key={label} style={{
                 background:"rgba(255,255,255,0.03)",
                 border:"1px solid rgba(99,120,220,0.12)",
