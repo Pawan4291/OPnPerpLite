@@ -15,24 +15,24 @@ import { createChart, ColorType, CrosshairMode, AreaSeries, CandlestickSeries } 
 ───────────────────────────────────────────── */
 
 const COLORS = {
-  bg: "#120C24",
-  surface:   "#181032",
-  panel:     "#211541",
-  border:    "#2A1F4A",
-  borderHi:  "#3D2E6A",
-  violet:    "#7B3FE4",
-  violetLo:  "#A259FF",
-  lavender:  "#C084FC",
-  muted:     "#B7A8E6",
-  dimmed:    "#3D2E6A",
-  text:      "#EDE9F6",
-  textSub:   "#E8DFFF",
-  green:     "#22C55E",
- greenLo: "rgba(34,197,94,0.25)",
-  greenBd:   "rgba(34,197,94,0.25)",
-  red:       "#EF4444",
- redLo: "rgba(239,68,68,0.25)",
-  redBd:     "rgba(239,68,68,0.25)",
+  bg:       "#080b14",
+  surface:  "#0d1120",
+  panel:    "#111827",
+  border:   "rgba(255,255,255,0.055)",
+  borderHi: "rgba(124,140,255,0.18)",
+  violet:   "#7c8cff",
+  violetLo: "#a78bfa",
+  lavender: "#a78bfa",
+  muted:    "#9b93c4",
+  dimmed:   "rgba(255,255,255,0.15)",
+  text:     "#e8e6f4",
+  textSub:  "#e8e6f4",
+  green:    "#00e5a0",
+  greenLo:  "rgba(0,229,160,0.10)",
+  greenBd:  "rgba(0,229,160,0.25)",
+  red:      "#f43f6e",
+  redLo:    "rgba(244,63,110,0.10)",
+  redBd:    "rgba(244,63,110,0.25)",
 };
 
 const TF_LIST = [];
@@ -400,8 +400,8 @@ useEffect(() => {
     { icon: "◈", label: "ACTIVE TRADERS", val: `${stats.activeTraders > 0 ? stats.activeTraders : "0"}`,           sub: "24h", color: COLORS.lavender },
   ].map(({ icon, label, val, sub, color }) => (
     <div key={label} style={{
-      background: "rgba(13,10,26,0.8)",
-      border: "1px solid rgba(123,63,228,0.20)",
+      background: "rgba(13,17,32,0.85)",
+border: "1px solid rgba(124,140,255,0.14)",
       borderRadius: 14,
       padding: "18px 20px",
       display: "flex",
@@ -552,7 +552,7 @@ useEffect(() => {
       color: "#a78bfa",
       textDecoration: "none",
       background: "rgba(123,63,228,0.12)",
-      border: "1px solid rgba(123,63,228,0.3)",
+     border: "1px solid rgba(124,140,255,0.2)",
       borderRadius: 8,
       padding: "8px 16px",
       letterSpacing: "0.06em",
@@ -580,7 +580,7 @@ function LWChart({ data, isUp, type, tf }) {
       layout: {
   background: {
     type: ColorType.Solid,
-  color: "#0A0812",
+  color: "#080b14",
   },
   textColor: COLORS.muted,
   fontFamily: "'Syne Mono', monospace",
@@ -614,7 +614,7 @@ timeScale: {
 
     
    
-
+ let series; 
     if (type === "Candle") {
       const series = chart.addSeries(CandlestickSeries, {
         upColor:      COLORS.green,
@@ -646,7 +646,7 @@ const candles = data
   .sort((a, b) => a.time - b.time);
       series.setData(candles);
     } else {
-    const series = chart.addSeries(AreaSeries, {
+    series = chart.addSeries(AreaSeries, {   // ← remove "const"
   lineColor: lc,
   topColor: isUp ? "rgba(34,197,94,0.30)" : "rgba(239,68,68,0.30)",
   bottomColor: isUp ? "rgba(34,197,94,0.01)" : "rgba(239,68,68,0.01)",
@@ -672,6 +672,7 @@ const lineData = data
     }
 
     chart.timeScale().fitContent();
+chart.timeScale().scrollToRealTime();
 
     // Tooltip
     const tip = document.createElement("div");
@@ -710,7 +711,31 @@ const lineData = data
   `;
 });
 
-    return () => chart.remove();
+   chart.timeScale().scrollToRealTime();
+
+    let tickCount = 0;
+const lastKnownTime = data[data.length - 1]?.timestamp
+  ? Math.floor(data[data.length - 1].timestamp / 1000)
+  : Math.floor(Date.now() / 1000);
+
+const liveInterval = setInterval(() => {
+  tickCount += 5;
+  const lastPrice = data[data.length - 1]?.price;
+  if (lastPrice && type !== "Candle") {
+    try {
+      series.update({ 
+        time: lastKnownTime + tickCount, 
+        value: lastPrice 
+      });
+      chart.timeScale().scrollToRealTime();
+    } catch {}
+  }
+}, 5000);
+
+    return () => {
+      clearInterval(liveInterval);
+      chart.remove();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.length, isUp, type, tf]);
 
@@ -739,11 +764,11 @@ function ChartLoader() {
 
 // ── Styles ──────────────────────────────────────────────────────────────────
 const s = {
- root: {
+root: {
   display: "flex",
   flexDirection: "column",
-  background: "#0D0A1A",        // ← replace the whole radial-gradient
-  fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace",
+  background: "#080b14",   // ← was #0D0A1A
+  fontFamily: "'IBM Plex Mono', monospace",
   color: COLORS.text,
   boxSizing: "border-box",
 },
@@ -754,7 +779,7 @@ const s = {
   display: "flex", alignItems: "center", justifyContent: "space-between",
   padding: "8px 18px",
   borderBottom: `1px solid ${COLORS.border}`,
-  background: "#0A0812",        // ← was rgba(13,10,26,0.85)
+  background: "#080b14",   // ← was #0A0812
   backdropFilter: "blur(16px)",
   flexWrap: "wrap", gap: 10,
   position: "sticky",
@@ -791,14 +816,14 @@ const s = {
   },
 
   // ── Body
- body: {
+body: {
   display: "grid",
   gridTemplateColumns: "minmax(0,1fr) 320px",
   height: "780px",
   overflow: "hidden",
   margin: "0 16px",
   alignItems: "start",
-  borderBottom: "1px solid rgba(123,63,228,0.15)",  // ← visual floor
+  borderBottom: "1px solid rgba(124,140,255,0.10)",
   paddingBottom: "0",
 },
 
@@ -808,17 +833,17 @@ chartCol: {
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
-  background: "linear-gradient(180deg, #0C0920 0%, #080614 100%)",
-  border: "1px solid rgba(123,63,228,0.30)",
+  background: "linear-gradient(180deg, #0d1120 0%, #080b14 100%)",  // ← was purple
+  border: "1px solid rgba(124,140,255,0.22)",
   borderRadius: "16px 0 0 16px",
-  boxShadow: "inset 0 1px 0 rgba(162,89,255,0.12), 0 0 60px rgba(123,63,228,0.08)",
+  boxShadow: "inset 0 1px 0 rgba(124,140,255,0.08), 0 0 40px rgba(0,0,0,0.3)",
 },
  chartBar: {
   flexShrink: 0,
   display: "flex", alignItems: "center", justifyContent: "space-between",
   padding: "8px 16px",
-  borderBottom: "1px solid rgba(123,63,228,0.18)",
-  background: "linear-gradient(90deg, rgba(18,12,36,0.95), rgba(12,8,24,0.95))",
+  borderBottom: "1px solid rgba(124,140,255,0.10)",
+  background: "rgba(13,17,32,0.95)",   // ← was purple
   backdropFilter: "blur(20px)",
 },
   tfRow: { display: "flex", gap: 2 },
@@ -846,15 +871,16 @@ orderCol: {
   flexDirection: "column",
   gap: 8,
   padding: "12px 16px",
-  background: "linear-gradient(180deg, #100D20 0%, #0A0818 100%)",
-  border: "1px solid rgba(123,63,228,0.30)",
-  borderLeft: "1px solid rgba(123,63,228,0.15)",
+  background: "linear-gradient(180deg, #0d1120 0%, #080b14 100%)",  // ← was purple
+  border: "1px solid rgba(124,140,255,0.22)",
+  borderLeft: "1px solid rgba(124,140,255,0.10)",
   borderRadius: "0 16px 16px 0",
   overflow: "hidden",
   boxSizing: "border-box",
   justifyContent: "space-between",
-  boxShadow: "inset 0 1px 0 rgba(162,89,255,0.08)",
+  boxShadow: "inset 0 1px 0 rgba(124,140,255,0.06)",
 },
+
 
   bsTabs: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 },
   bsBtn: {
@@ -989,8 +1015,8 @@ opnSection: {
 },
 
 opnCard: {
-  background: "rgba(10,8,20,0.95)",
-  border: "1px solid rgba(123,63,228,0.22)",
+  background: "rgba(13,17,32,0.85)",
+  border: "1px solid rgba(124,140,255,0.14)",
   borderRadius: 16,
   padding: 0,             // ← remove padding, cardBody owns it
   overflow: "hidden",     // ← so illustration clips to border-radius
@@ -1004,7 +1030,7 @@ opnCard: {
     height: 180,
     overflow: "hidden",
     borderRadius: "14px 14px 0 0",
-    background: "linear-gradient(180deg, #0E0B1E 0%, #0A0818 100%)",
+   background: "linear-gradient(180deg, #0d1120 0%, #080b14 100%)",
     flexShrink: 0,
   },
   cardBody: {
@@ -1039,8 +1065,8 @@ opnCard: {
     width: 36,
     height: 36,
     borderRadius: 8,
-    background: "rgba(123,63,228,0.2)",
-    border: "1px solid rgba(123,63,228,0.4)",
+    background: "rgba(124,140,255,0.1)",
+border: "1px solid rgba(124,140,255,0.25)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -1052,7 +1078,7 @@ opnCard: {
     fontWeight: 700,
     color: COLORS.muted,
     letterSpacing: "0.08em",
-    border: "1px solid rgba(123,63,228,0.25)",
+    border: "1px solid rgba(124,140,255,0.15)",
     borderRadius: 6,
     padding: "3px 8px",
   },
