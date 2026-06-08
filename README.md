@@ -22,6 +22,13 @@ OPN Perp Lite fixes that. It is the first protocol where OPN holders can long or
 
 <img width="1475" height="764" alt="Screenshot Capture - 2026-06-07 - 11-47-08" src="https://github.com/user-attachments/assets/f5064670-067c-4590-bcf3-13908fa0ef20" />
 
+## Technical Highlights
+- 28 passing tests covering all position flows
+- Health factor per position updating in real time  
+- On-chain leaderboard tracking realized PnL from contract events
+- Live price chart built from 50 on-chain price history points
+- Auto-liquidation keeper with 5% bonus incentive
+
 ## Deployed Contracts — OPN Testnet (Chain ID: 984)
 
 | Contract | Address | Explorer |
@@ -70,6 +77,7 @@ PerpEngine.sol ←——→ LiquidityVault.sol
 - All contracts verified on testnet.iopn.tech
 - Keeper running 24/7 on Railway
 - Deployer wallet matches builder profile on builders.iopn.tech
+- 28 passing test suite covering all contract flows
 
 ## Tech Stack
 - **Contracts**: Solidity 0.8.20, Hardhat
