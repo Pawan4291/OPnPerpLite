@@ -66,6 +66,9 @@ if (!showApp) return (
         <a className="hero-btn-secondary" href="https://testnet.iopn.tech" target="_blank" rel="noreferrer">
           Explorer ↗
         </a>
+        <a className="hero-btn-secondary" href="https://x.com/OPNPerpLite" target="_blank" rel="noreferrer">
+  𝕏 Follow
+</a>
       </div>
 
       <div className="hero-contracts">
@@ -207,6 +210,7 @@ if (!showApp) return (
     <span>Season 1 · DeFi & Open Finance</span>
   </div>
   <div className="footer-right">
+    <a href="https://x.com/OPNPerpLite" target="_blank" rel="noreferrer">𝕏 Follow ↗</a>
     <a href="https://testnet.iopn.tech" target="_blank" rel="noreferrer">Testnet Explorer ↗</a>
     <a href="https://builders.iopn.tech" target="_blank" rel="noreferrer">Builders Dashboard ↗</a>
     <a href="https://faucet.iopn.tech" target="_blank" rel="noreferrer">Faucet ↗</a>
